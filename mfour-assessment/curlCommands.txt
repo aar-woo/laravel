@@ -1,0 +1,10 @@
+Curl Commands for testing
+
+Creating a new user
+    curl -v -d "firstName=Jane&lastName=Dough&email=janedoe@gmail.com" http://localhost:8000/api/users/create
+
+Updating a user
+    curl -v -d "id=5&lastName=Doe" http://localhost:8000/api/users/update/5
+
+Retrieve a list of users
+    curl -v http://localhost:8000/api/users

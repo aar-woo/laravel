@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Exceptions;
 
     /**
-     * UserController class handles all requests and queries the database
+     * UserController class handles all requests, queries the database
      * and responds to the client if their request was successful
      * or if there was an error
      */
@@ -22,7 +22,7 @@ class UserController extends Controller {
      *
      * @param Request $request, the client's request
      *
-     * @return Response either success or error message
+     * @return Response either a success or error message
      */
     public function store(Request $request)
     {
@@ -56,12 +56,12 @@ class UserController extends Controller {
     }
 
      /**
-      * Updates the user with matching id
+      * Updates the user with a matching id
       * Requests must have an id and update at least one other field
       * or will respond with appropriate error response
       * @param Request $request, the client's request
       *
-      * @return
+      * @return Response either a success or error message
       */
     public function update(Request $request) {
         try {
