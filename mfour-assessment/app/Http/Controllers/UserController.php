@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Exceptions;
-use App\Http\Requests;
+// use App\Http\Requests;
 
 class UserController extends Controller {
     /**
@@ -31,7 +31,6 @@ class UserController extends Controller {
             ]);
             $user->save();
             return $user;
-
         } catch (\Illuminate\Database\QueryException $exception) {
             return response()->json([
                 'status' => 'error',
@@ -45,10 +44,28 @@ class UserController extends Controller {
         }
     }
 
-    public function getUsers() {
-        $users = User::all();
-        foreach ($users as $user) {
-            echo $user;
+    public function update(Request $request) {
+        try {
+            $request->validate([
+                'id' => 'required',
+                'firstName' => 'required_without_all:lastName,email',
+                'lastName' => 'required_without_all:firstName,email',
+                'email' => 'required_without_all:firstName,lastName',
+            ]);
+            $id = $request->get('id');
+            $input = $request->all();
+            User::whereId($id)->update($input);
+            return $input;
+        } catch (\Illuminate\Validation\ValidationException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'id is required and at least one field must be updated',
+            ], 400);
         }
+    }
+
+    public function getUsers() {
+        $users = User::select('firstName', 'lastName', 'email')->get();
+        return $users;
     }
 }

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 Route::post('/users/create', [UserController::class, 'store']);
-// Route::post('/users/create', 'App\Http\Controllers\UserController@store');
+
+Route::post('/users/update/{id}', [UserController::class, 'update']);
 
 Route::get('/users', [UserController::class, 'getUsers']);
