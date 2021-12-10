@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 use App\Exceptions;
 
     /**
-     * UserController class handles querying the users table in the database
-     * and responding to the client if their request was successful
+     * UserController class handles all requests and queries the database
+     * and responds to the client if their request was successful
      * or if there was an error
      */
 
