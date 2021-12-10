@@ -12,7 +12,7 @@ class UserController extends Controller {
     /*
      * Storing a new user in our database
      * Requests must firstName, lastName, and email
-     * or will respond with approriate erro response
+     * or will respond with approriate error response
      */
     public function store(Request $request)
     {
@@ -43,9 +43,9 @@ class UserController extends Controller {
     }
 
      /*
-     * Updating
-     * Requests must firstName, lastName, and email
-     * or will respond with approriate erro response
+     * Updates user with matching id
+     * Requests must have an id and at update at least one other field
+     * or will respond with appropriate error response
      */
     public function update(Request $request) {
         try {
@@ -74,6 +74,7 @@ class UserController extends Controller {
         }
     }
 
+    // Retrieves columns firstName, lastName and email for all users
     public function getUsers() {
         $users = User::select('firstName', 'lastName', 'email')->get();
         return $users;
