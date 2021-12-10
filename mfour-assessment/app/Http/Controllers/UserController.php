@@ -6,16 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Http\Request;
-
-// use DB;
-// use App\Http\Requests;
-// use App\Http\Controllers\Controller;
+use App\Exceptions;
+use App\Http\Requests;
 
 class UserController extends Controller {
-    public function createUser() {
-        DB::insert('insert into users (firstName, lastName, email) values (?, ?)', ['example', 'test', 'example@gmail.com']);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -24,17 +18,31 @@ class UserController extends Controller {
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'firstName'=>'required',
-            'lastName'=>'required',
-            'email'=>'required'
-        ]);
-        $user = new User([
-            'firstName' => $request->get('firstName'),
-            'lastName' => $request->get('lastName'),
-            'email' => $request->get('email')
-        ]);
-        $user->save();
+        try{
+            $request->validate([
+                'firstName' => 'required',
+                'lastName' => 'required',
+                'email' => 'required'
+            ]);
+            $user = new User([
+                'firstName' => $request->get('firstName'),
+                'lastName' => $request->get('lastName'),
+                'email' => $request->get('email')
+            ]);
+            $user->save();
+            return $user;
+
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'Query Exception, email already exists',
+            ], 409);
+        } catch (\Illuminate\Validation\ValidationException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'firstName, lastName, and email are required fields',
+            ], 400);
+        }
     }
 
     public function getUsers() {
