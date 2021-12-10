@@ -8,11 +8,21 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Exceptions;
 
+    /**
+     * UserController class handles querying the users table in the database
+     * and responding to the client if their request was successful
+     * or if there was an error
+     */
+
 class UserController extends Controller {
-    /*
-     * Storing a new user in our database
-     * Requests must firstName, lastName, and email
+    /**
+     * Stores a new user in the database
+     * Requests must have a firstName, lastName, and email
      * or will respond with approriate error response
+     *
+     * @param Request $request, the client's request
+     *
+     * @return Response either success or error message
      */
     public function store(Request $request)
     {
@@ -28,11 +38,14 @@ class UserController extends Controller {
                 'email' => $request->get('email')
             ]);
             $user->save();
-            return $user;
+            return response()->json([
+                'status' => 'success',
+                'msg' => 'User created',
+            ], 201);
         } catch (\Illuminate\Database\QueryException $exception) {
             return response()->json([
                 'status' => 'error',
-                'msg' => 'Query Exception, email already exists',
+                'msg' => 'This email already exits, email must be unique',
             ], 409);
         } catch (\Illuminate\Validation\ValidationException $exception) {
             return response()->json([
@@ -42,11 +55,14 @@ class UserController extends Controller {
         }
     }
 
-     /*
-     * Updates user with matching id
-     * Requests must have an id and at update at least one other field
-     * or will respond with appropriate error response
-     */
+     /**
+      * Updates the user with matching id
+      * Requests must have an id and update at least one other field
+      * or will respond with appropriate error response
+      * @param Request $request, the client's request
+      *
+      * @return
+      */
     public function update(Request $request) {
         try {
             $request->validate([
@@ -65,7 +81,10 @@ class UserController extends Controller {
                  ], 400);
             }
             User::whereId($id)->update($input);
-            return $input;
+            return response()->json([
+                'status' => 'success',
+                'msg' => 'User updated',
+            ], 200);
         } catch (\Illuminate\Validation\ValidationException $exception) {
             return response()->json([
                 'status' => 'error',
@@ -74,7 +93,11 @@ class UserController extends Controller {
         }
     }
 
-    // Retrieves columns firstName, lastName and email for all users
+    /**
+     * Retrieves columns firstName, lastName, and email for all users
+     *
+     * @return $users, array of users
+     */
     public function getUsers() {
         $users = User::select('firstName', 'lastName', 'email')->get();
         return $users;
