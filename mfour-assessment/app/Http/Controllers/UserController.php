@@ -7,14 +7,12 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Exceptions;
-// use App\Http\Requests;
 
 class UserController extends Controller {
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+    /*
+     * Storing a new user in our database
+     * Requests must firstName, lastName, and email
+     * or will respond with approriate erro response
      */
     public function store(Request $request)
     {
@@ -44,6 +42,11 @@ class UserController extends Controller {
         }
     }
 
+     /*
+     * Updating
+     * Requests must firstName, lastName, and email
+     * or will respond with approriate erro response
+     */
     public function update(Request $request) {
         try {
             $request->validate([
@@ -54,6 +57,13 @@ class UserController extends Controller {
             ]);
             $id = $request->get('id');
             $input = $request->all();
+            $user = User::all()->where('id', '=', $id);
+            if ($user == '[]') {
+                return response()->json([
+                'status' => 'error',
+                'msg' => 'no user with that id',
+                 ], 400);
+            }
             User::whereId($id)->update($input);
             return $input;
         } catch (\Illuminate\Validation\ValidationException $exception) {
